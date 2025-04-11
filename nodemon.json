@@ -1,0 +1,8 @@
+{
+  "restartable": "rs",
+  "ignore": [".git", "node_modules/", "dist/", "src/element.ts"],
+  "watch": ["src/"],
+  "exec": "npm run generate:element && tsc --noEmit && node ./build.mjs --dev || exit 1",
+  "ext": "js,ts,css,html",
+  "delay": "2"
+}

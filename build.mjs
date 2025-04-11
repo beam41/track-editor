@@ -1,14 +1,19 @@
 import * as esbuild from 'esbuild';
 import { load } from 'cheerio';
-import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync } from 'fs';
+import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'fs';
+import { join } from 'path';
+
+const dev = process.argv.some((arg) => {
+  return arg === '--dev';
+});
 
 const result = await esbuild.build({
   entryPoints: ['./src/index.ts'],
   bundle: true,
-  minify: true,
+  minify: !dev,
   platform: 'browser',
   tsconfig: './tsconfig.json',
-  treeShaking: true,
+  treeShaking: !dev,
   write: false,
   external: ['three'],
   format: 'esm',
@@ -38,3 +43,12 @@ if (existsSync('./dist')) {
 mkdirSync('./dist');
 writeFileSync('./dist/track-editor.html', $.html(), 'utf8');
 copyFileSync('./src/map.png', './dist/map.png');
+
+const resultFile = readdirSync('./dist');
+const longestFileName = resultFile.reduce((a, c) => Math.max(a, c.length), 0);
+
+console.log(`${dev ? 'Dev' : 'Prod'} build complete`);
+resultFile.forEach((file) => {
+  const fStat = statSync(join('./dist', file));
+  console.log(file.padEnd(longestFileName), (fStat.size / 1024).toFixed(2) + ' kb');
+});

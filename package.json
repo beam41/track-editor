@@ -5,6 +5,7 @@
   "scripts": {
     "generate:element": "node ./generateElement.mjs",
     "build": "npm run generate:element && tsc --noEmit && node ./build.mjs",
+    "dev": "nodemon",
     "lint": "prettier --check ./src && eslint ./src",
     "lint:fix": "prettier --write ./src && eslint --fix ./src"
   },
@@ -20,6 +21,7 @@
     "esbuild": "^0.25.2",
     "eslint": "^9.24.0",
     "globals": "^16.0.0",
+    "nodemon": "^3.1.9",
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1"
