@@ -23,14 +23,12 @@ const resultCss = await esbuild.build({
 const html = readFileSync('./src/index.html', 'utf8');
 const $ = load(html);
 
-const decoder = new TextDecoder('utf8');
-
 result.outputFiles.forEach((out) => {
-  $('body').append(`<script type="module">${decoder.decode(out.contents)}</script>`);
+  $('body').append(`<script type="module">${out.text}</script>`);
 });
 
 resultCss.outputFiles.forEach((out) => {
-  $('head').append(`<style>${decoder.decode(out.contents)}</style>`);
+  $('head').append(`<style>${out.text}</style>`);
 });
 
 if (existsSync('./dist')) {
