@@ -4,6 +4,7 @@ import {
   mapCanvas,
   selectedInfo,
   rotationInput,
+  rotationRangeInput,
   waypointDetails,
   applyRotationBtn,
   loadTrackBtn,
@@ -12,7 +13,7 @@ import {
   downloadBtn,
   preview3D,
 } from './element';
-import type { Matrix3x3, TrackData, Vector2 } from './index.types';
+import type { Matrix3x3, Quaternion, TrackData, Vector2 } from './index.types';
 
 function scaled(x: number) {
   return x * window.devicePixelRatio;
@@ -344,37 +345,66 @@ mapCanvas.addEventListener('click', (e) => {
 function updateEditorPanel() {
   if (selectedIndex === null || !trackData || !trackData.waypoints[selectedIndex]) {
     selectedInfo.innerText = 'No waypoint selected';
-    rotationInput.value = '';
+    rotationInput.value = '0.00';
+    rotationRangeInput.value = '0.00';
     waypointDetails.innerText = '';
   } else {
     selectedInfo.innerText = 'Selected waypoint index: ' + selectedIndex;
     const wp = trackData.waypoints[selectedIndex];
     const yaw = 2 * Math.atan2(wp.rotation.z, wp.rotation.w);
-    rotationInput.value = ((yaw * 180) / Math.PI).toFixed(2);
+    const yawDeg = ((yaw * 180) / Math.PI).toFixed(2);
+    rotationInput.value = yawDeg;
+    rotationRangeInput.value = yawDeg;
     waypointDetails.innerText = JSON.stringify(wp.rotation, null, 4);
   }
 }
+
+rotationInput.addEventListener('input', () => {
+  rotationRangeInput.value = rotationInput.value;
+  const q = getQuaternion(parseFloat(rotationInput.value));
+  if (!q) {
+    return;
+  }
+  updatePreview3D(q);
+});
+rotationRangeInput.addEventListener('input', () => {
+  rotationInput.value = (+rotationRangeInput.value).toFixed(2);
+  const q = getQuaternion(parseFloat(rotationInput.value));
+  if (!q) {
+    return;
+  }
+  updatePreview3D(q);
+});
+
 applyRotationBtn.addEventListener('click', function () {
   if (selectedIndex === null || !trackData || !trackData.waypoints[selectedIndex]) {
     alert('No waypoint selected.');
     return;
   }
-  const newDeg = parseFloat(rotationInput.value);
-  if (isNaN(newDeg)) {
+  const q = getQuaternion(parseFloat(rotationInput.value));
+  if (!q) {
+    return;
+  }
+  trackData.waypoints[selectedIndex].rotation = q;
+  updateEditorPanel();
+  drawMap();
+  updatePreview3D();
+});
+
+function getQuaternion(degYaw: number) {
+  if (isNaN(degYaw)) {
     alert('Please enter a valid number.');
     return;
   }
-  const newYaw = (newDeg * Math.PI) / 180;
-  trackData.waypoints[selectedIndex].rotation = {
+  const newYaw = (degYaw * Math.PI) / 180;
+  return {
     x: 0,
     y: 0,
     z: Math.sin(newYaw / 2),
     w: Math.cos(newYaw / 2),
   };
-  updateEditorPanel();
-  drawMap();
-  updatePreview3D();
-});
+}
+
 loadTrackBtn.addEventListener('click', function () {
   if (fileInput.files && fileInput.files.length > 0) {
     const file = fileInput.files[0];
@@ -489,11 +519,14 @@ function init3DPreview() {
   previewRenderer.setAnimationLoop(animatePreview);
 }
 
-function updatePreview3D() {
-  if (selectedIndex === null || !trackData || !trackData.waypoints[selectedIndex]) {
-    return;
-  }
-  const q = trackData.waypoints[selectedIndex].rotation;
+function updatePreview3D(displayValue?: Quaternion) {
+  const q = displayValue ??
+    trackData?.waypoints[selectedIndex ?? 0].rotation ?? {
+      x: 0,
+      y: 0,
+      z: 0,
+      w: 1,
+    };
   const yaw = 2 * Math.atan2(q.z, q.w);
   // have to flip yaw to match in game because I don't know...
   previewObject.rotation.set(0, -yaw, 0);

@@ -44,8 +44,9 @@ body {
   padding: 10px;
   box-sizing: border-box;
 }
-#editorContainer input[type='number'] {
+#editorContainer input {
   width: 100%;
+  box-sizing: border-box;
 }
 #previewContainer {
   border: 1px solid #ccc;

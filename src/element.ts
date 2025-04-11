@@ -11,6 +11,7 @@ export const editorAndPreview = /*#__PURE__*/ getElementByIdStrict<HTMLDivElemen
 export const editorContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("editorContainer");
 export const selectedInfo = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("selectedInfo");
 export const rotationInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationInput");
+export const rotationRangeInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationRangeInput");
 export const applyRotationBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("applyRotationBtn");
 export const waypointDetails = /*#__PURE__*/ getElementByIdStrict<HTMLPreElement>("waypointDetails");
 export const previewContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("previewContainer");

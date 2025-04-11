@@ -51,7 +51,8 @@
           <div style="margin-top: 10px">
             <label>
               Rotation (degrees): <br />
-              <input type="number" id="rotationInput" />
+              <input type="number" id="rotationInput" value="0" />
+              <input type="range" id="rotationRangeInput" min="-180" max="180" step="0.01" />
             </label>
           </div>
           <button id="applyRotationBtn" style="margin-top: 10px; width: 100%">Apply Rotation</button>
@@ -67,6 +68,7 @@
         <!-- 3D Preview Panel -->
         <div id="previewContainer">
           <h3>3D Preview</h3>
+          <p>Arrow indicate north</p>
           <canvas id="preview3D" width="300" height="300"></canvas>
         </div>
       </div>
