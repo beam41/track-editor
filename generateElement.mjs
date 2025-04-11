@@ -129,7 +129,7 @@ $('[id]').each((_, el) => {
 
 const output =
   "// don't edit this file please use npm run generate:element\n" +
-  "import { getElementByIdStrict } from './getElementByIdStrict'\n" +
+  "import { getElementByIdStrict } from './utils/getElementByIdStrict'\n" +
   ids
     .map(
       ({ tag, id }) =>
@@ -139,4 +139,4 @@ const output =
     )
     .join('');
 
-writeFileSync('./src/element.ts', output, 'utf8');
+writeFileSync('./src/element.generated.ts', output, 'utf8');

@@ -6,12 +6,13 @@
   </head>
   <body>
     <!-- Top row: Import track JSON -->
-    <div id="topRow">
+    <div class="topRow">
       <h2>Import Track JSON</h2>
       <p>You can paste your complete track JSON or use the file upload. (Ensure your JSON is valid.)</p>
-      <textarea
-        id="trackJson"
-        placeholder='{
+      <div class="trackImport">
+        <textarea
+          id="trackJson"
+          placeholder='{
   "routeName": "Test Track",
   "waypoints": [
     {
@@ -31,21 +32,22 @@
     }
   ]
 }'
-      ></textarea>
-      <input type="file" id="fileInput" />
-      <button id="loadTrackBtn">Load Track</button>
+        ></textarea>
+        <input type="file" id="fileInput" />
+      </div>
+      <button id="loadTrackBtn" type="button">Load Track</button>
     </div>
 
     <!-- Main container: Map Plot and Editor/3D Preview -->
-    <div id="mainContainer">
+    <div class="mainContainer">
       <!-- Left: Map Plot with alignment -->
-      <div id="canvasContainer">
+      <div class="canvasContainer">
         <canvas id="mapCanvas" width="1000" height="1000"></canvas>
       </div>
       <!-- Right: Editor and 3D Preview -->
-      <div id="editorAndPreview">
+      <div class="rightBox">
         <!-- Waypoint Editor Panel -->
-        <div id="editorContainer">
+        <div class="editorContainer">
           <h3>Waypoint Editor</h3>
           <div id="selectedInfo">No waypoint selected</div>
           <div style="margin-top: 10px">
@@ -55,7 +57,7 @@
               <input type="range" id="rotationRangeInput" min="-180" max="180" step="0.01" />
             </label>
           </div>
-          <button id="applyRotationBtn" style="margin-top: 10px; width: 100%">Apply Rotation</button>
+          <button id="applyRotationBtn" style="margin-top: 10px; width: 100%" type="button">Apply Rotation</button>
           <hr style="margin: 16px 0" />
           <div>
             <strong>Selected Waypoint Details</strong>
@@ -66,17 +68,14 @@
           </div>
         </div>
         <!-- 3D Preview Panel -->
-        <div id="previewContainer">
+        <div class="previewContainer">
           <h3>3D Preview</h3>
           <p>Arrow indicate north</p>
           <canvas id="preview3D" width="300" height="300"></canvas>
         </div>
+        <button id="downloadBtn" disabled type="button">Download Updated JSON</button>
+        <button id="clipboardBtn" disabled type="button">Copy to clipboard</button>
       </div>
-    </div>
-
-    <!-- Bottom row: Download updated JSON -->
-    <div id="bottomRow">
-      <button id="downloadBtn" disabled>Download Updated JSON</button>
     </div>
 
     <script type="importmap">

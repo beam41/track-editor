@@ -2,63 +2,71 @@ body {
   font-family: sans-serif;
   margin: 20px;
 }
+
 /* Top row: JSON input & file upload */
-#topRow {
+.topRow {
   margin-bottom: 20px;
 }
-#topRow textarea {
+
+.trackImport {
+  display: flex;
+  margin: 1em 0;
+}
+
+.trackImport textarea {
   width: 80%;
   height: 150px;
   font-family: monospace;
-  vertical-align: top;
+  resize: vertical;
 }
-#topRow input[type='file'] {
-  vertical-align: top;
-  margin-left: 10px;
-}
-#topRow button {
+
+.trackImport input[type='file'] {
   vertical-align: top;
   margin-left: 10px;
 }
+
 /* Main container: left = map plot; right = editor & 3D preview */
-#mainContainer {
+.mainContainer {
   display: flex;
   gap: 20px;
   margin-bottom: 20px;
 }
-#canvasContainer {
+
+.canvasContainer {
   flex: 1;
 }
-#canvasContainer canvas {
+
+.canvasContainer canvas {
   border: 1px solid #000;
   cursor: grab;
 }
-#editorAndPreview {
+
+.rightBox {
   width: 320px;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-#editorContainer {
+
+.editorContainer {
   border: 1px solid #ccc;
   padding: 10px;
   box-sizing: border-box;
 }
-#editorContainer input {
+
+.editorContainer input {
   width: 100%;
   box-sizing: border-box;
 }
-#previewContainer {
+
+.previewContainer {
   border: 1px solid #ccc;
   padding: 10px;
   box-sizing: border-box;
 }
-#previewContainer canvas {
+
+.previewContainer canvas {
   display: block;
   margin: auto;
   border: 1px solid #aaa;
-}
-/* Bottom row: download button */
-#bottomRow {
-  margin-top: 20px;
 }

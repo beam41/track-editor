@@ -2,6 +2,7 @@ import * as esbuild from 'esbuild';
 import { load } from 'cheerio';
 import { readFileSync, writeFileSync, mkdirSync, existsSync, copyFileSync, rmSync, readdirSync, statSync } from 'fs';
 import { join } from 'path';
+import { minify } from 'html-minifier';
 
 const dev = process.argv.some((arg) => {
   return arg === '--dev';
@@ -25,8 +26,10 @@ const resultCss = await esbuild.build({
   write: false,
 });
 
-const html = readFileSync('./src/index.html', 'utf8');
+const html = readFileSync('./src/index.html', { encoding: 'utf8', ignoreWhitespace: false });
 const $ = load(html);
+
+$('script[type="importmap"]').text($('script[type="importmap"]').text().replace(/\s/g, ''));
 
 result.outputFiles.forEach((out) => {
   $('body').append(`<script type="module">${out.text}</script>`);
@@ -36,12 +39,21 @@ resultCss.outputFiles.forEach((out) => {
   $('head').append(`<style>${out.text}</style>`);
 });
 
+const minHtml = dev
+  ? $.html()
+  : minify($.html(), {
+      html5: true,
+      collapseWhitespace: true,
+      decodeEntities: true,
+      removeComments: true,
+    });
+
 if (existsSync('./dist')) {
   rmSync('./dist', { recursive: true, force: true });
 }
 
 mkdirSync('./dist');
-writeFileSync('./dist/track-editor.html', $.html(), 'utf8');
+writeFileSync('./dist/track-editor.html', minHtml, 'utf8');
 copyFileSync('./src/map.png', './dist/map.png');
 
 const resultFile = readdirSync('./dist');
