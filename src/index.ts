@@ -14,6 +14,10 @@ import {
 } from './element';
 import type { Matrix3x3, TrackData, Vector2 } from './index.types';
 
+function scaled(x: number) {
+  return x * window.devicePixelRatio;
+}
+
 const H_DEFAULT = [
   [1, 0, 0],
   [0, 1, 0],
@@ -26,8 +30,8 @@ let selectedIndex: number | null = null;
 
 // For the map view:
 const mapCanvasCtx = mapCanvas.getContext('2d');
-mapCanvas.width = 1000 * window.devicePixelRatio;
-mapCanvas.height = 1000 * window.devicePixelRatio;
+mapCanvas.width = scaled(1000);
+mapCanvas.height = scaled(1000);
 mapCanvas.style.width = '1000px';
 mapCanvas.style.height = '1000px';
 
@@ -53,7 +57,7 @@ const referenceMapPoints = [
   { x: 1000, y: 0 },
   { x: 1000, y: 1000 },
   { x: 0, y: 1000 },
-];
+].map(({ x, y }) => ({ x: scaled(x), y: scaled(y) }));
 
 // The homography matrix (3x3) mapping world points to canvas points.
 let H = H_DEFAULT as Matrix3x3;
@@ -293,8 +297,8 @@ mapCanvas.addEventListener('mousemove', (e) => {
   const currentY = e.clientY - rect.top;
   const dx = currentX - lastX;
   const dy = currentY - lastY;
-  offsetX += dx;
-  offsetY += dy;
+  offsetX += scaled(dx);
+  offsetY += scaled(dy);
   lastX = currentX;
   lastY = currentY;
   drawMap();
@@ -314,8 +318,8 @@ mapCanvas.addEventListener('click', (e) => {
   if (isDragging) return;
   const rect = mapCanvas.getBoundingClientRect();
   // Get click position in the transformed coordinate space.
-  const clickX = (e.clientX - rect.left - offsetX) / currentScale;
-  const clickY = (e.clientY - rect.top - offsetY) / currentScale;
+  const clickX = (scaled(e.clientX) - scaled(rect.left) - offsetX) / currentScale;
+  const clickY = (scaled(e.clientY) - scaled(rect.top) - offsetY) / currentScale;
   let minDist = Infinity;
   let nearestIndex = null;
   if (trackData && trackData.waypoints) {
@@ -327,7 +331,6 @@ mapCanvas.addEventListener('click', (e) => {
         nearestIndex = index;
       }
     });
-    // Use a threshold (adjust if needed) in canvas (transformed) units.
     if (minDist < 10) {
       selectedIndex = nearestIndex;
       updateEditorPanel();
@@ -454,6 +457,32 @@ function init3DPreview() {
   sunLight.position.z = 10;
   previewScene.add(sunLight);
 
+  const northBody = new THREE.Mesh(
+    new THREE.CylinderGeometry(1, 1, 4, 8),
+    new THREE.MeshStandardMaterial({
+      color: 0x0000ff,
+      wireframe: false,
+      side: THREE.DoubleSide,
+    }),
+  );
+  northBody.rotateX(Math.PI / 2);
+  northBody.rotateZ(Math.PI / 2);
+  northBody.position.x = -12;
+  previewScene.add(northBody);
+
+  const northHead = new THREE.Mesh(
+    new THREE.CylinderGeometry(0, 2, 2.5, 8),
+    new THREE.MeshStandardMaterial({
+      color: 0x0000ff,
+      wireframe: false,
+      side: THREE.DoubleSide,
+    }),
+  );
+  northHead.rotateX(Math.PI / 2);
+  northHead.rotateZ(Math.PI / 2);
+  northHead.position.x = -15;
+  previewScene.add(northHead);
+
   function animatePreview() {
     previewRenderer.render(previewScene, previewCamera);
   }
@@ -466,7 +495,8 @@ function updatePreview3D() {
   }
   const q = trackData.waypoints[selectedIndex].rotation;
   const yaw = 2 * Math.atan2(q.z, q.w);
-  previewObject.rotation.set(0, yaw, 0);
+  // have to flip yaw to match in game because I don't know...
+  previewObject.rotation.set(0, -yaw, 0);
 }
 
 init3DPreview();
