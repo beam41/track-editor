@@ -65,7 +65,6 @@ export function init3DPreview() {
   );
   northHead.rotateX(Math.PI / 2);
   northHead.rotateZ(Math.PI / 2);
-  northHead.rotateZ(Math.PI / 2);
   northHead.position.x = -15;
   previewScene.add(northHead);
 
