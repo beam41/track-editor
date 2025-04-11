@@ -1,0 +1,27 @@
+{
+  "name": "track-editor",
+  "version": "1.0.0",
+  "main": "build.js",
+  "scripts": {
+    "generate:element": "node ./generateElement.mjs",
+    "build": "npm run generate:element && tsc --noEmit && node ./build.mjs",
+    "lint": "prettier --check ./src && eslint ./src",
+    "lint:fix": "prettier --write ./src && eslint --fix ./src"
+  },
+  "author": "ASEAN Motor Town Club",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@eslint/css": "^0.6.0",
+    "@eslint/js": "^9.24.0",
+    "@eslint/json": "^0.11.0",
+    "@types/three": "^0.175.0",
+    "cheerio": "^1.0.0",
+    "esbuild": "^0.25.2",
+    "eslint": "^9.24.0",
+    "globals": "^16.0.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.3",
+    "typescript-eslint": "^8.29.1"
+  }
+}

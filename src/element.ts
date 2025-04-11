@@ -1,0 +1,19 @@
+// don't edit this file please use npm run generate:element
+import { getElementByIdStrict } from './getElementByIdStrict'
+export const topRow = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("topRow");
+export const trackJson = /*#__PURE__*/ getElementByIdStrict<HTMLTextAreaElement>("trackJson");
+export const fileInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("fileInput");
+export const loadTrackBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("loadTrackBtn");
+export const mainContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("mainContainer");
+export const canvasContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("canvasContainer");
+export const mapCanvas = /*#__PURE__*/ getElementByIdStrict<HTMLCanvasElement>("mapCanvas");
+export const editorAndPreview = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("editorAndPreview");
+export const editorContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("editorContainer");
+export const selectedInfo = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("selectedInfo");
+export const rotationInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationInput");
+export const applyRotationBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("applyRotationBtn");
+export const waypointDetails = /*#__PURE__*/ getElementByIdStrict<HTMLPreElement>("waypointDetails");
+export const previewContainer = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("previewContainer");
+export const preview3D = /*#__PURE__*/ getElementByIdStrict<HTMLCanvasElement>("preview3D");
+export const bottomRow = /*#__PURE__*/ getElementByIdStrict<HTMLDivElement>("bottomRow");
+export const downloadBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("downloadBtn");

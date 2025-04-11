@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Integrated Track & Waypoint Editor with Map Alignment</title>
+  </head>
+  <body>
+    <!-- Top row: Import track JSON -->
+    <div id="topRow">
+      <h2>Import Track JSON</h2>
+      <p>You can paste your complete track JSON or use the file upload. (Ensure your JSON is valid.)</p>
+      <textarea
+        id="trackJson"
+        placeholder='{
+  "routeName": "Test Track",
+  "waypoints": [
+    {
+      "rotation": { "x": 0, "y": 0, "z": 0, "w": 1 },
+      "translation": { "x": 0, "y": 0, "z": 0 },
+      "scale3D": { "x": 1, "y": 1, "z": 1 }
+    },
+    {
+      "rotation": { "x": 0, "y": 0, "z": 0.7071, "w": 0.7071 },
+      "translation": { "x": 100, "y": 150, "z": 0 },
+      "scale3D": { "x": 1, "y": 1, "z": 1 }
+    },
+    {
+      "rotation": { "x": 0, "y": 0, "z": -0.3827, "w": 0.9239 },
+      "translation": { "x": 200, "y": 50, "z": 0 },
+      "scale3D": { "x": 1, "y": 1, "z": 1 }
+    }
+  ]
+}'
+      ></textarea>
+      <input type="file" id="fileInput" />
+      <button id="loadTrackBtn">Load Track</button>
+    </div>
+
+    <!-- Main container: Map Plot and Editor/3D Preview -->
+    <div id="mainContainer">
+      <!-- Left: Map Plot with alignment -->
+      <div id="canvasContainer">
+        <canvas id="mapCanvas" width="1000" height="1000"></canvas>
+      </div>
+      <!-- Right: Editor and 3D Preview -->
+      <div id="editorAndPreview">
+        <!-- Waypoint Editor Panel -->
+        <div id="editorContainer">
+          <h3>Waypoint Editor</h3>
+          <div id="selectedInfo">No waypoint selected</div>
+          <div style="margin-top: 10px">
+            <label>
+              Rotation (degrees): <br />
+              <input type="number" id="rotationInput" />
+            </label>
+          </div>
+          <button id="applyRotationBtn" style="margin-top: 10px; width: 100%">Apply Rotation</button>
+          <hr style="margin: 16px 0" />
+          <div>
+            <strong>Selected Waypoint Details</strong>
+            <pre
+              id="waypointDetails"
+              style="background: #f9f9f9; padding: 8px; max-height: 150px; overflow: auto"
+            ></pre>
+          </div>
+        </div>
+        <!-- 3D Preview Panel -->
+        <div id="previewContainer">
+          <h3>3D Preview</h3>
+          <canvas id="preview3D" width="300" height="300"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom row: Download updated JSON -->
+    <div id="bottomRow">
+      <button id="downloadBtn" disabled>Download Updated JSON</button>
+    </div>
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.175.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+        }
+      }
+    </script>
+  </body>
+</html>

@@ -1,0 +1,63 @@
+body {
+  font-family: sans-serif;
+  margin: 20px;
+}
+/* Top row: JSON input & file upload */
+#topRow {
+  margin-bottom: 20px;
+}
+#topRow textarea {
+  width: 80%;
+  height: 150px;
+  font-family: monospace;
+  vertical-align: top;
+}
+#topRow input[type='file'] {
+  vertical-align: top;
+  margin-left: 10px;
+}
+#topRow button {
+  vertical-align: top;
+  margin-left: 10px;
+}
+/* Main container: left = map plot; right = editor & 3D preview */
+#mainContainer {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+#canvasContainer {
+  flex: 1;
+}
+#canvasContainer canvas {
+  border: 1px solid #000;
+  cursor: grab;
+}
+#editorAndPreview {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+#editorContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
+#editorContainer input[type='number'] {
+  width: 100%;
+}
+#previewContainer {
+  border: 1px solid #ccc;
+  padding: 10px;
+  box-sizing: border-box;
+}
+#previewContainer canvas {
+  display: block;
+  margin: auto;
+  border: 1px solid #aaa;
+}
+/* Bottom row: download button */
+#bottomRow {
+  margin-top: 20px;
+}
