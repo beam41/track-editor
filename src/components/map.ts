@@ -21,7 +21,9 @@ let isDragging = false,
 
 /* ========= Map Drawing Functions ========= */
 const mapImage = new Image();
+let mapLoaded = false;
 mapImage.onload = function () {
+  mapLoaded = true;
   fitMapToReference();
 };
 // Ensure this points to your actual map image.
@@ -61,7 +63,7 @@ export function drawMap() {
   mapCanvasCtx.scale(currentScale, currentScale);
 
   // Draw the map image.
-  if (mapImage) {
+  if (mapImage && mapLoaded) {
     mapCanvasCtx.drawImage(mapImage, 0, 0, mapCanvas.width, mapCanvas.height);
   }
 

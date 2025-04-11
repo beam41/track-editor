@@ -11,7 +11,8 @@ export function initEvent() {
         try {
           JSON.parse(e.target?.result as string);
           trackJson.value = e.target?.result as string;
-        } catch {
+        } catch (e) {
+          console.error('fileInput input failed:', e);
           alert('Invalid JSON file.');
         }
       };
@@ -24,7 +25,8 @@ export function initEvent() {
     try {
       global.trackData = JSON.parse(text);
       afterLoadTrack();
-    } catch {
+    } catch (e) {
+      console.error('loadTrackBtn click failed:', e);
       alert('Invalid JSON text.');
     }
   });
