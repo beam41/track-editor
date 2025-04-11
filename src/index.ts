@@ -26,6 +26,11 @@ let selectedIndex: number | null = null;
 
 // For the map view:
 const mapCanvasCtx = mapCanvas.getContext('2d');
+mapCanvas.width = 1000 * window.devicePixelRatio;
+mapCanvas.height = 1000 * window.devicePixelRatio;
+mapCanvas.style.width = '1000px';
+mapCanvas.style.height = '1000px';
+
 let currentScale = 1,
   offsetX = 0,
   offsetY = 0;
@@ -421,19 +426,33 @@ function init3DPreview() {
     canvas: preview3D,
     antialias: true,
   });
-  previewRenderer.setSize(preview3D.width, preview3D.height);
+  previewRenderer.setPixelRatio(window.devicePixelRatio);
+  previewRenderer.setSize(preview3D.width / window.devicePixelRatio, preview3D.height / window.devicePixelRatio);
   const previewScene = new THREE.Scene();
   previewScene.background = new THREE.Color(0xe8fffb);
   const previewCamera = new THREE.PerspectiveCamera(75, preview3D.width / preview3D.height, 0.1, 1000);
-  previewCamera.position.set(10, 10, 10);
+  previewCamera.position.set(12, 12, 12);
 
   const previewControls = new OrbitControls(previewCamera, preview3D);
   previewControls.update();
-
   previewScene.add(previewObject);
+
+  const grass = new THREE.Mesh(
+    new THREE.PlaneGeometry(20, 20, 1),
+    new THREE.MeshStandardMaterial({ color: 0x00ee00, side: THREE.DoubleSide }),
+  );
+  grass.rotateX(-Math.PI / 2);
+  grass.position.y = -5;
+  previewScene.add(grass);
 
   const ambientLight = new THREE.AmbientLight(0xffffff, 1);
   previewScene.add(ambientLight);
+
+  const sunLight = new THREE.DirectionalLight(0xffffff, 2);
+  sunLight.position.x = 10;
+  sunLight.position.y = 10;
+  sunLight.position.z = 10;
+  previewScene.add(sunLight);
 
   function animatePreview() {
     previewRenderer.render(previewScene, previewCamera);
