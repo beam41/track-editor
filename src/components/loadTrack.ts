@@ -37,6 +37,7 @@ export function initEvent() {
         zoomFit();
         downloadBtn.disabled = false;
         clipboardBtn.disabled = false;
+        window.scrollTo(0, document.body.scrollHeight);
       } catch (e) {
         console.error('loadTrackBtn click failed:', e);
         alert('Invalid JSON text.');
