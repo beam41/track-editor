@@ -1,5 +1,4 @@
 import type { Matrix3x3, Vector2 } from '../index.types';
-import { scaled } from '../utils/scaled';
 
 const H_DEFAULT = [
   [1, 0, 0],
@@ -16,22 +15,8 @@ const referenceWorldPoints = [
   { x: -1279574.7736519347, y: 1879092.599622732 }, // bottom-left
 ];
 
-// Destination points matching the canvas dimensions (800×800)
-const referenceMapPoints = [
-  { x: 0, y: 0 },
-  { x: 1000, y: 0 },
-  { x: 1000, y: 1000 },
-  { x: 0, y: 1000 },
-].map(({ x, y }) => ({ x: scaled(x), y: scaled(y) }));
-
 // The homography matrix (3x3) mapping world points to canvas points.
-let H: Matrix3x3;
-try {
-  H = computeHomography(referenceWorldPoints, referenceMapPoints);
-} catch (e) {
-  console.error('Homography computation failed:', e);
-  H = H_DEFAULT;
-}
+let H: Matrix3x3 = H_DEFAULT;
 
 /* ========= Homography Computation ========= */
 function solveLinearSystem(A: number[][], b: number[]) {
@@ -97,4 +82,20 @@ export function transformPoint(point: Vector2) {
   const yp = H[1][0] * x + H[1][1] * y + H[1][2];
   const wp = H[2][0] * x + H[2][1] * y + H[2][2];
   return { x: xp / wp, y: yp / wp };
+}
+
+export function updateHomography(x: number, y: number) {
+  const referenceMapPoints = [
+    { x: 0, y: 0 },
+    { x: x, y: 0 },
+    { x: x, y: y },
+    { x: 0, y: y },
+  ];
+
+  try {
+    H = computeHomography(referenceWorldPoints, referenceMapPoints);
+  } catch (e) {
+    console.error('Homography computation failed:', e);
+    H = H_DEFAULT;
+  }
 }

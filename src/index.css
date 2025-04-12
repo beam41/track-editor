@@ -11,18 +11,25 @@ body {
 .trackImport {
   display: flex;
   margin: 1em 0;
+  gap: 20px;
 }
 
 .trackImport textarea {
-  width: 80%;
+  flex: 1;
   height: 150px;
   font-family: monospace;
+  /* eslint-disable css/use-baseline */
   resize: vertical;
 }
 
-.trackImport input[type='file'] {
-  vertical-align: top;
-  margin-left: 10px;
+#fileInput {
+  flex: 1;
+}
+
+.trackImportRight {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Main container: left = map plot; right = editor & 3D preview */
@@ -33,6 +40,7 @@ body {
 }
 
 .canvasContainer {
+  display: flex;
   flex: 1;
 }
 
@@ -69,4 +77,9 @@ body {
   display: block;
   margin: auto;
   border: 1px solid #aaa;
+}
+
+#mapCanvas {
+  width: 100%;
+  height: calc(100dvh - 40px);
 }

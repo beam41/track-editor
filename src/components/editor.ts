@@ -29,35 +29,53 @@ export function updateEditorPanel() {
 }
 
 export function initEvent() {
-  rotationInput.addEventListener('input', () => {
-    rotationRangeInput.value = rotationInput.value;
-    const q = getQuaternion(parseFloat(rotationInput.value));
-    if (!q) {
-      return;
-    }
-    updatePreview3D(q);
-  });
-  rotationRangeInput.addEventListener('input', () => {
-    rotationInput.value = (+rotationRangeInput.value).toFixed(2);
-    const q = getQuaternion(parseFloat(rotationInput.value));
-    if (!q) {
-      return;
-    }
-    updatePreview3D(q);
-  });
+  rotationInput.addEventListener(
+    'input',
+    () => {
+      rotationRangeInput.value = rotationInput.value;
+      const q = getQuaternion(parseFloat(rotationInput.value));
+      if (!q) {
+        return;
+      }
+      updatePreview3D(q);
+    },
+    {
+      passive: true,
+    },
+  );
+  rotationRangeInput.addEventListener(
+    'input',
+    () => {
+      rotationInput.value = (+rotationRangeInput.value).toFixed(2);
+      const q = getQuaternion(parseFloat(rotationInput.value));
+      if (!q) {
+        return;
+      }
+      updatePreview3D(q);
+    },
+    {
+      passive: true,
+    },
+  );
 
-  applyRotationBtn.addEventListener('click', function () {
-    if (global.selectedIndex === null || !global.trackData || !global.trackData.waypoints[global.selectedIndex]) {
-      alert('No waypoint selected.');
-      return;
-    }
-    const q = getQuaternion(parseFloat(rotationInput.value));
-    if (!q) {
-      return;
-    }
-    global.trackData.waypoints[global.selectedIndex].rotation = q;
-    updateEditorPanel();
-    drawMap();
-    updatePreview3D();
-  });
+  applyRotationBtn.addEventListener(
+    'click',
+    function () {
+      if (global.selectedIndex === null || !global.trackData || !global.trackData.waypoints[global.selectedIndex]) {
+        alert('No waypoint selected.');
+        return;
+      }
+      const q = getQuaternion(parseFloat(rotationInput.value));
+      if (!q) {
+        return;
+      }
+      global.trackData.waypoints[global.selectedIndex].rotation = q;
+      updateEditorPanel();
+      drawMap();
+      updatePreview3D();
+    },
+    {
+      passive: true,
+    },
+  );
 }

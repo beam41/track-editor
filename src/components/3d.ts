@@ -1,6 +1,7 @@
 import { preview3D } from 'src/element.generated';
 import { global } from 'src/global';
 import type { Quaternion } from 'src/index.types';
+import { invertScaled } from 'src/utils/scaled';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
@@ -15,7 +16,7 @@ export function init3DPreview() {
     antialias: true,
   });
   previewRenderer.setPixelRatio(window.devicePixelRatio);
-  previewRenderer.setSize(preview3D.width / window.devicePixelRatio, preview3D.height / window.devicePixelRatio);
+  previewRenderer.setSize(invertScaled(preview3D.width), invertScaled(preview3D.height));
   const previewScene = new THREE.Scene();
   previewScene.background = new THREE.Color(0xe8fffb);
   const previewCamera = new THREE.PerspectiveCamera(75, preview3D.width / preview3D.height, 0.1, 1000);
