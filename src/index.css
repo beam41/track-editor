@@ -3,6 +3,18 @@ body {
   margin: 20px;
 }
 
+* {
+  margin: 0;
+}
+
+.topRow p {
+  margin: 1em 0;
+}
+
+.rightBox p {
+  margin: 0.5em 0;
+}
+
 /* Top row: JSON input & file upload */
 .topRow {
   margin-bottom: 20px;
@@ -42,6 +54,7 @@ body {
 .canvasContainer {
   display: flex;
   flex: 1;
+  position: relative;
 }
 
 .canvasContainer canvas {
@@ -51,9 +64,19 @@ body {
 
 .rightBox {
   width: 320px;
+  height: calc(100dvh - 40px);
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.rightBoxScrollable {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: scroll;
+  position: relative;
 }
 
 .editorContainer {
@@ -82,4 +105,35 @@ body {
 #mapCanvas {
   width: 100%;
   height: calc(100dvh - 40px);
+}
+
+.btnContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  bottom: 0;
+  background: white;
+}
+
+#waypointDetails {
+  background: #f9f9f9;
+  padding: 8px;
+  max-height: 150px;
+  overflow: auto;
+}
+
+#applyRotationBtn {
+  margin-top: 10px;
+  width: 100%;
+}
+
+#recenterBtn {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  display: none;
+}
+
+#rotationInput {
+  margin-top: 4px;
 }

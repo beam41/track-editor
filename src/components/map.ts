@@ -1,4 +1,4 @@
-import { mapCanvas } from '../element.generated';
+import { mapCanvas, recenterBtn } from '../element.generated';
 import { global } from '../global';
 import { transformPoint, updateHomography } from './homography';
 import { scaled } from '../utils/scaled';
@@ -11,12 +11,12 @@ const canvasBound = mapCanvas.getBoundingClientRect();
 mapCanvas.width = scaled(canvasBound.width);
 mapCanvas.height = scaled(canvasBound.height);
 
-let currentScale = 1,
-  offsetX = 0,
-  offsetY = 0;
-let isDragging = false,
-  lastX = 0,
-  lastY = 0;
+let currentScale = 1;
+let offsetX = 0;
+let offsetY = 0;
+let isDragging = false;
+let lastX = 0;
+let lastY = 0;
 
 /* ========= Map Drawing Functions ========= */
 const mapImage = new Image();
@@ -38,6 +38,7 @@ const baseArrowHeadLength = scaled(1); // originally 10 → now 1
 const baseConnectingLineWidth = scaled(0.2); // originally 2 → now 0.2
 const baseArrowLineWidth = scaled(0.2); // originally 2 → now 0.2
 const baseLabelFontSize = scaled(0.6); // originally 6px → now 0.6px
+const selectRadius = baseCheckpointRadius + scaled(1);
 
 // Dynamic marker scale factor based on current overall scale.
 function getMarkerScale() {
@@ -52,7 +53,10 @@ export function drawMap() {
     console.error('mapCanvas not found');
     return;
   }
-  mapCanvasCtx.clearRect(0, 0, mapCanvas.width, mapCanvas.height);
+  mapCanvasCtx.reset();
+  mapCanvasCtx.fillStyle = ' #285879';
+  mapCanvasCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
+
   mapCanvasCtx.save();
   mapCanvasCtx.translate(offsetX, offsetY);
   mapCanvasCtx.scale(currentScale, currentScale);
@@ -75,7 +79,7 @@ export function drawMap() {
   }
   updateHomography(mapWidth, mapHeight);
 
-  if (global.trackData && global.trackData.waypoints) {
+  if (global.trackData?.waypoints) {
     const markerScale = getMarkerScale();
     // Compute transformed points for each waypoint.
     const mapPoints = global.trackData.waypoints.map((wp) => {
@@ -168,38 +172,46 @@ export function zoomFit() {
     return;
   }
 
-  if (!(global.trackData && global.trackData.waypoints)) {
-    console.error('track data waypoints invalid');
-    return;
-  }
-
-  let minX = Infinity;
-  let minY = Infinity;
-  let maxX = -Infinity;
-  let maxY = -Infinity;
-  global.trackData.waypoints
-    .map((wp) => transformPoint(wp.translation))
-    .forEach((point) => {
-      minX = Math.min(point.x, minX);
-      minY = Math.min(point.y, minY);
-      maxX = Math.max(point.x, maxX);
-      maxY = Math.max(point.y, maxY);
-    });
-  const deltaX = maxX - minX;
-  const deltaY = maxY - minY;
-  if (deltaX > deltaY) {
-    currentScale = (mapCanvas.width - scaled(64)) / deltaX;
-    offsetX = -minX * currentScale + scaled(32);
-    const midpointY = (minY + maxY) / 2;
-    offsetY = -midpointY * currentScale + mapCanvas.height / 2;
+  if (!global.trackData?.waypoints) {
+    currentScale = 1;
+    offsetX = 0;
+    offsetY = 0;
   } else {
-    currentScale = (mapCanvas.height - scaled(64)) / deltaY;
-    offsetY = -minY * currentScale + scaled(32);
-    const midpointX = (minX + maxX) / 2;
-    offsetX = -midpointX * currentScale + mapCanvas.width / 2;
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+    global.trackData.waypoints
+      .map((wp) => transformPoint(wp.translation))
+      .forEach((point) => {
+        minX = Math.min(point.x, minX);
+        minY = Math.min(point.y, minY);
+        maxX = Math.max(point.x, maxX);
+        maxY = Math.max(point.y, maxY);
+      });
+    const deltaX = maxX - minX;
+    const deltaY = maxY - minY;
+    const currentScaleX = (mapCanvas.width - scaled(64)) / deltaX;
+    const currentScaleY = (mapCanvas.height - scaled(64)) / deltaY;
+    if (currentScaleX < currentScaleY) {
+      currentScale = Math.min(40, currentScaleX);
+      offsetX = -minX * currentScale + scaled(32);
+      const midpointY = (minY + maxY) / 2;
+      offsetY = -midpointY * currentScale + mapCanvas.height / 2;
+    } else {
+      currentScale = Math.min(40, currentScaleY);
+      offsetY = -minY * currentScale + scaled(32);
+      const midpointX = (minX + maxX) / 2;
+      offsetX = -midpointX * currentScale + mapCanvas.width / 2;
+    }
   }
 
+  updateRecenterBtn(true);
   drawMap();
+}
+
+export function updateRecenterBtn(centered: boolean) {
+  recenterBtn.style.display = centered ? 'none' : 'unset';
 }
 
 /* ========= Panning and Zooming for the Map ========= */
@@ -211,95 +223,108 @@ export function initEvent() {
       const rect = mapCanvas.getBoundingClientRect();
       const mouseX = e.clientX - rect.left;
       const mouseY = e.clientY - rect.top;
-      const zoomFactor = e.deltaY < 0 ? 1.1 : 0.9;
+      const zoomFactor = Math.sign(e.deltaY) * -0.1;
       const worldX = (mouseX - offsetX) / currentScale;
       const worldY = (mouseY - offsetY) / currentScale;
-      currentScale *= zoomFactor;
-      offsetX = mouseX - worldX * currentScale;
-      offsetY = mouseY - worldY * currentScale;
-      drawMap();
+      let nextCurrentScale = currentScale + zoomFactor;
+      nextCurrentScale = Math.max(1, Math.min(30, nextCurrentScale));
+      if (nextCurrentScale !== currentScale) {
+        currentScale = nextCurrentScale;
+        offsetX = mouseX - worldX * currentScale;
+        offsetY = mouseY - worldY * currentScale;
+        updateRecenterBtn(false);
+        drawMap();
+      }
     },
     {
       passive: false,
     },
   );
 
-  mapCanvas.addEventListener(
-    'mousedown',
-    (e) => {
-      isDragging = true;
-      mapCanvas.style.cursor = 'grabbing';
-      const rect = mapCanvas.getBoundingClientRect();
-      lastX = e.clientX - rect.left;
-      lastY = e.clientY - rect.top;
-    },
-    {
-      passive: true,
-    },
-  );
+  const mouseDownEvent = (e: MouseEvent | TouchEvent) => {
+    isDragging = true;
+    mapCanvas.style.cursor = 'grabbing';
+    const rect = mapCanvas.getBoundingClientRect();
+    const clientX = (e as MouseEvent).clientX ?? (e as TouchEvent).touches[0].clientX;
+    const clientY = (e as MouseEvent).clientY ?? (e as TouchEvent).touches[0].clientY;
+    lastX = clientX - rect.left;
+    lastY = clientY - rect.top;
+  };
 
-  mapCanvas.addEventListener(
-    'mousemove',
-    (e) => {
-      const rect = mapCanvas.getBoundingClientRect();
-      if (isDragging) {
-        const currentX = e.clientX - rect.left;
-        const currentY = e.clientY - rect.top;
-        const dx = currentX - lastX;
-        const dy = currentY - lastY;
-        offsetX += scaled(dx);
-        offsetY += scaled(dy);
-        lastX = currentX;
-        lastY = currentY;
-        drawMap();
-      } else {
-        const hoverX = (scaled(e.clientX) - scaled(rect.left) - offsetX) / currentScale;
-        const hoverY = (scaled(e.clientY) - scaled(rect.top) - offsetY) / currentScale;
+  mapCanvas.addEventListener('mousedown', mouseDownEvent, {
+    passive: true,
+  });
 
-        if (!(global.trackData && global.trackData.waypoints)) {
+  mapCanvas.addEventListener('touchstart', mouseDownEvent, {
+    passive: true,
+  });
+
+  const mouseMoveEvent = (e: MouseEvent | TouchEvent) => {
+    e.preventDefault();
+    const rect = mapCanvas.getBoundingClientRect();
+
+    const clientX = (e as MouseEvent).clientX ?? (e as TouchEvent).touches[0].clientX;
+    const clientY = (e as MouseEvent).clientY ?? (e as TouchEvent).touches[0].clientY;
+
+    if (isDragging) {
+      const currentX = clientX - rect.left;
+      const currentY = clientY - rect.top;
+      const dx = currentX - lastX;
+      const dy = currentY - lastY;
+      lastX = currentX;
+      lastY = currentY;
+      offsetX += scaled(dx);
+      offsetY += scaled(dy);
+      updateRecenterBtn(false);
+      drawMap();
+    } else {
+      if (!global.trackData?.waypoints) {
+        return;
+      }
+
+      const hoverX = (scaled(clientX) - scaled(rect.left) - offsetX) / currentScale;
+      const hoverY = (scaled(clientY) - scaled(rect.top) - offsetY) / currentScale;
+
+      for (let i = 0; i < global.trackData.waypoints.length; i++) {
+        if (i === global.selectedIndex) {
+          continue;
+        }
+
+        const pt = transformPoint(global.trackData.waypoints[i].translation);
+        const dist = Math.hypot(hoverX - pt.x, hoverY - pt.y);
+        if (dist < selectRadius) {
+          mapCanvas.style.cursor = 'pointer';
           return;
         }
-
-        const mapPoints = global.trackData.waypoints.map((wp) => transformPoint(wp.translation));
-
-        const hasClosePoint = mapPoints.some((pt, i) => {
-          if (i === global.selectedIndex) return false;
-          const dist = Math.hypot(hoverX - pt.x, hoverY - pt.y);
-          return dist < baseCheckpointRadius + scaled(1);
-        });
-        if (hasClosePoint) {
-          mapCanvas.style.cursor = 'pointer';
-        } else {
-          mapCanvas.style.cursor = 'grab';
-        }
       }
-    },
-    {
-      passive: true,
-    },
-  );
-
-  mapCanvas.addEventListener(
-    'mouseup',
-    () => {
-      isDragging = false;
       mapCanvas.style.cursor = 'grab';
-    },
-    {
-      passive: true,
-    },
-  );
+    }
+  };
 
-  mapCanvas.addEventListener(
-    'mouseleave',
-    () => {
-      isDragging = false;
-      mapCanvas.style.cursor = 'grab';
-    },
-    {
-      passive: true,
-    },
-  );
+  mapCanvas.addEventListener('mousemove', mouseMoveEvent, {
+    passive: false,
+  });
+
+  mapCanvas.addEventListener('touchmove', mouseMoveEvent, {
+    passive: false,
+  });
+
+  const mouseUpEvent = () => {
+    isDragging = false;
+    mapCanvas.style.cursor = 'grab';
+  };
+
+  mapCanvas.addEventListener('mouseup', mouseUpEvent, {
+    passive: true,
+  });
+
+  mapCanvas.addEventListener('mouseleave', mouseUpEvent, {
+    passive: true,
+  });
+
+  mapCanvas.addEventListener('touchend', mouseUpEvent, {
+    passive: true,
+  });
 
   // Add a "click" listener for waypoint selection.
   mapCanvas.addEventListener(
@@ -307,15 +332,16 @@ export function initEvent() {
     (e) => {
       // Only proceed if not dragging.
       if (isDragging) return;
+      if (!global.trackData?.waypoints) {
+        console.error('track data waypoints invalid');
+        return;
+      }
+
       const rect = mapCanvas.getBoundingClientRect();
       // Get click position in the transformed coordinate space.
       const clickX = (scaled(e.clientX) - scaled(rect.left) - offsetX) / currentScale;
       const clickY = (scaled(e.clientY) - scaled(rect.top) - offsetY) / currentScale;
 
-      if (!(global.trackData && global.trackData.waypoints)) {
-        console.error('track data waypoints invalid');
-        return;
-      }
       const mapPoints = global.trackData.waypoints.map((wp) => transformPoint(wp.translation));
 
       // easier to select point close together
@@ -323,7 +349,7 @@ export function initEvent() {
         .map((pt, index) => ({ pt, i: index }))
         .filter(({ pt }) => {
           const dist = Math.hypot(clickX - pt.x, clickY - pt.y);
-          return dist < baseCheckpointRadius + scaled(1);
+          return dist < selectRadius;
         });
 
       if (candidatePoints.length === 0) {
@@ -349,10 +375,13 @@ export function initEvent() {
       const canvasBound = mapCanvas.getBoundingClientRect();
       mapCanvas.width = scaled(canvasBound.width);
       mapCanvas.height = scaled(canvasBound.height);
+      updateRecenterBtn(false);
       drawMap();
     },
     {
       passive: true,
     },
   );
+
+  recenterBtn.addEventListener('click', zoomFit, { passive: true });
 }
