@@ -7,6 +7,7 @@ import type { Vector2 } from 'src/index.types';
 
 // For the map view:
 const mapCanvasCtx = mapCanvas.getContext('2d');
+
 const canvasBound = mapCanvas.getBoundingClientRect();
 mapCanvas.width = scaled(canvasBound.width);
 mapCanvas.height = scaled(canvasBound.height);
@@ -22,8 +23,8 @@ function transformPoint(point: Vector2) {
   const x = point.x,
     y = point.y;
   const maxSize = Math.max(mapCanvas.width, mapCanvas.height);
-  const xp = ((x + 1280000) / (1280000 + 918000)) * maxSize;
-  const yp = ((y + 318000) / (318000 + 1880000)) * maxSize;
+  const xp = ((x + 1280000) / 2200000) * maxSize;
+  const yp = ((y + 320000) / 2200000) * maxSize;
   return { x: xp, y: yp };
 }
 
@@ -63,7 +64,7 @@ export function drawMap() {
     return;
   }
   mapCanvasCtx.reset();
-  mapCanvasCtx.fillStyle = ' #285879';
+  mapCanvasCtx.fillStyle = ' #375d87';
   mapCanvasCtx.fillRect(0, 0, mapCanvas.width, mapCanvas.height);
 
   mapCanvasCtx.save();
@@ -79,7 +80,7 @@ export function drawMap() {
     } else {
       mapWidth = mapHeight * (mapImage.width / mapImage.height);
     }
-
+    mapCanvasCtx.imageSmoothingEnabled = false;
     mapCanvasCtx.drawImage(mapImage, 0, 0, mapWidth, mapHeight);
   } else if (mapWidth > mapHeight) {
     mapHeight = mapWidth;
@@ -174,6 +175,8 @@ function drawArrowHead(
   ctx.fill();
 }
 
+const FIT_PADDING = 64;
+
 export function zoomFit() {
   if (!mapCanvasCtx) {
     console.error('mapCanvas not found');
@@ -199,16 +202,16 @@ export function zoomFit() {
       });
     const deltaX = maxX - minX;
     const deltaY = maxY - minY;
-    const currentScaleX = (mapCanvas.width - scaled(64)) / deltaX;
-    const currentScaleY = (mapCanvas.height - scaled(64)) / deltaY;
+    const currentScaleX = (mapCanvas.width - scaled(FIT_PADDING * 2)) / deltaX;
+    const currentScaleY = (mapCanvas.height - scaled(FIT_PADDING * 2)) / deltaY;
     if (currentScaleX < currentScaleY) {
       currentScale = Math.min(40, currentScaleX);
-      offsetX = -minX * currentScale + scaled(32);
+      offsetX = -minX * currentScale + scaled(FIT_PADDING);
       const midpointY = (minY + maxY) / 2;
       offsetY = -midpointY * currentScale + mapCanvas.height / 2;
     } else {
       currentScale = Math.min(40, currentScaleY);
-      offsetY = -minY * currentScale + scaled(32);
+      offsetY = -minY * currentScale + scaled(FIT_PADDING);
       const midpointX = (minX + maxX) / 2;
       offsetX = -midpointX * currentScale + mapCanvas.width / 2;
     }
