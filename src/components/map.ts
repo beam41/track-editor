@@ -1,9 +1,9 @@
 import { mapCanvas, recenterBtn } from '../element.generated';
 import { global } from '../global';
-import { transformPoint, updateHomography } from './homography';
 import { scaled } from '../utils/scaled';
 import { updatePreview3D } from './3d';
 import { updateEditorPanel } from './editor';
+import type { Vector2 } from 'src/index.types';
 
 // For the map view:
 const mapCanvasCtx = mapCanvas.getContext('2d');
@@ -17,6 +17,15 @@ let offsetY = 0;
 let isDragging = false;
 let lastX = 0;
 let lastY = 0;
+
+function transformPoint(point: Vector2) {
+  const x = point.x,
+    y = point.y;
+  const maxSize = Math.max(mapCanvas.width, mapCanvas.height);
+  const xp = ((x + 1280000) / (1280000 + 918000)) * maxSize;
+  const yp = ((y + 318000) / (318000 + 1880000)) * maxSize;
+  return { x: xp, y: yp };
+}
 
 /* ========= Map Drawing Functions ========= */
 const mapImage = new Image();
@@ -77,7 +86,6 @@ export function drawMap() {
   } else {
     mapWidth = mapHeight;
   }
-  updateHomography(mapWidth, mapHeight);
 
   if (global.trackData?.waypoints) {
     const markerScale = getMarkerScale();
@@ -226,7 +234,7 @@ export function initEvent() {
       const zoomFactor = Math.sign(e.deltaY) * -0.1;
       const worldX = (mouseX - offsetX) / currentScale;
       const worldY = (mouseY - offsetY) / currentScale;
-      let nextCurrentScale = currentScale + zoomFactor;
+      let nextCurrentScale = currentScale * (1 + zoomFactor);
       nextCurrentScale = Math.max(1, Math.min(30, nextCurrentScale));
       if (nextCurrentScale !== currentScale) {
         currentScale = nextCurrentScale;
