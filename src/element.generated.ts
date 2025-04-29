@@ -3,7 +3,7 @@ import { getElementByIdStrict } from './utils/getElementByIdStrict'
 export const trackJson = /*#__PURE__*/ getElementByIdStrict<HTMLTextAreaElement>("trackJson");
 export const fileInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("fileInput");
 export const loadTrackBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("loadTrackBtn");
-export const mapCanvas = /*#__PURE__*/ getElementByIdStrict<HTMLCanvasElement>("mapCanvas");
+export const mapCanvas = /*#__PURE__*/ getElementByIdStrict<HTMLElement>("mapCanvas");
 export const recenterBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("recenterBtn");
 export const selectedInfo = /*#__PURE__*/ getElementByIdStrict<HTMLParagraphElement>("selectedInfo");
 export const rotationInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationInput");

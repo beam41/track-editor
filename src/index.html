@@ -44,7 +44,7 @@
     <div class="mainContainer">
       <!-- Left: Map Plot with alignment -->
       <div class="canvasContainer">
-        <canvas id="mapCanvas" width="1000" height="1000"></canvas>
+        <mt-map id="mapCanvas" track-mode="true" point-color="blue" point-selected-color="orange"></mt-map>
         <button id="recenterBtn" type="button">Recenter</button>
       </div>
       <!-- Right: Editor and 3D Preview -->
@@ -80,11 +80,12 @@
       </div>
     </div>
 
+    <script src="./map.js" type="module"></script>
     <script type="importmap">
       {
         "imports": {
-          "three": "https://unpkg.com/three@0.175.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.175.0/examples/jsm/"
+          "three": "https://unpkg.com/three@0.176.0/build/three.module.js",
+          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.176.0/examples/jsm/"
         }
       }
     </script>

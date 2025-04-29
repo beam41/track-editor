@@ -53,8 +53,9 @@ if (existsSync('./dist')) {
 }
 
 mkdirSync('./dist');
-writeFileSync('./dist/track-editor.html', minHtml, 'utf8');
-copyFileSync('./src/map.png', './dist/map.png');
+writeFileSync('./dist/index.html', minHtml, 'utf8');
+copyFileSync('./mt-map/dist/map.png', './dist/map.png');
+copyFileSync('./mt-map/dist/map.js', './dist/map.js');
 
 const resultFile = readdirSync('./dist');
 const longestFileName = resultFile.reduce((a, c) => Math.max(a, c.length), 0);

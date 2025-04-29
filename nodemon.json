@@ -2,7 +2,7 @@
   "restartable": "rs",
   "ignore": [".git", "node_modules/", "dist/", "*.generated.ts"],
   "watch": ["src/"],
-  "exec": "npm run generate:element && node ./build.mjs --dev || exit 1",
+  "exec": "npm run generate:element && node ./build.mjs --dev && http-server ./dist -d false --cors --port 3000  || exit 1",
   "ext": "js,ts,css,html",
   "delay": "2"
 }

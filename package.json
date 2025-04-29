@@ -5,6 +5,7 @@
   "scripts": {
     "generate:element": "node ./generateElement.mjs",
     "build": "npm run generate:element && tsc --noEmit && node ./build.mjs",
+    "build:component": "cd ./mt-map && npm run build:component",
     "dev": "nodemon",
     "lint": "prettier --check ./src && eslint ./src",
     "lint:fix": "prettier --write ./src && eslint --fix ./src"
@@ -26,5 +27,8 @@
     "prettier": "^3.5.3",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.29.1"
+  },
+  "dependencies": {
+    "http-server": "^14.1.1"
   }
 }

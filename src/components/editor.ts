@@ -8,7 +8,7 @@ import {
 import { global } from 'src/global';
 import { getQuaternion } from 'src/utils/getQuaternion';
 import { updatePreview3D } from './3d';
-import { drawMap } from './map';
+import { mapCanvasEl } from './map';
 
 /* ========= Editor Panel and JSON Load/Export ========= */
 export function updateEditorPanel() {
@@ -71,7 +71,13 @@ export function initEvent() {
       }
       global.trackData.waypoints[global.selectedIndex].rotation = q;
       updateEditorPanel();
-      drawMap();
+      mapCanvasEl.setPoint(
+        global.trackData.waypoints.map((wp) => ({
+          position: wp.translation,
+          rotation: wp.rotation,
+        })),
+      );
+
       updatePreview3D();
     },
     {

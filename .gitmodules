@@ -1,0 +1,3 @@
+[submodule "mt-map"]
+	path = mt-map
+	url = https://github.com/beam41/mt-map
