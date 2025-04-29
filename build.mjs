@@ -8,6 +8,8 @@ const dev = process.argv.some((arg) => {
   return arg === '--dev';
 });
 
+const id = Date.now();
+
 const result = await esbuild.build({
   entryPoints: ['./src/index.ts'],
   bundle: true,
@@ -30,7 +32,7 @@ const html = readFileSync('./src/index.html', { encoding: 'utf8', ignoreWhitespa
 const $ = load(html);
 
 $('script[type="importmap"]').text($('script[type="importmap"]').text().replace(/\s/g, ''));
-
+$('body').append(`  <script src="./map_${id}.js" type="module"></script>`);
 result.outputFiles.forEach((out) => {
   $('body').append(`<script type="module">${out.text}</script>`);
 });
@@ -55,7 +57,7 @@ if (existsSync('./dist')) {
 mkdirSync('./dist');
 writeFileSync('./dist/index.html', minHtml, 'utf8');
 copyFileSync('./mt-map/dist/map.png', './dist/map.png');
-copyFileSync('./mt-map/dist/map.js', './dist/map.js');
+copyFileSync('./mt-map/dist/map.js', `./dist/map_${id}.js`);
 
 const resultFile = readdirSync('./dist');
 const longestFileName = resultFile.reduce((a, c) => Math.max(a, c.length), 0);
