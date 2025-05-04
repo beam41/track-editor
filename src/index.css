@@ -42,6 +42,7 @@ body {
   width: 320px;
   display: flex;
   flex-direction: column;
+  gap: 20px;
 }
 
 /* Main container: left = map plot; right = editor & 3D preview */

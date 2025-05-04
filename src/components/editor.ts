@@ -79,6 +79,7 @@ export function initEvent() {
       );
 
       updatePreview3D();
+      mapCanvasEl.drawMap();
     },
     {
       passive: true,

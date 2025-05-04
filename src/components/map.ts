@@ -2,6 +2,7 @@ import { mapCanvas } from '../element.generated';
 import { global } from '../global';
 import { updatePreview3D } from './3d';
 import { updateEditorPanel } from './editor';
+import '../../mt-map/dist/map';
 import type { MotorTownMap } from '../../mt-map/dist/map';
 
 export const mapCanvasEl = mapCanvas as MotorTownMap;
