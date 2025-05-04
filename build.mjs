@@ -8,8 +8,6 @@ const dev = process.argv.some((arg) => {
   return arg === '--dev';
 });
 
-const id = Date.now();
-
 const result = await esbuild.build({
   entryPoints: ['./src/index.ts'],
   bundle: true,
@@ -32,7 +30,6 @@ const html = readFileSync('./src/index.html', { encoding: 'utf8', ignoreWhitespa
 const $ = load(html);
 
 $('script[type="importmap"]').text($('script[type="importmap"]').text().replace(/\s/g, ''));
-$('body').append(`  <script src="./map_${id}.js" type="module"></script>`);
 result.outputFiles.forEach((out) => {
   $('body').append(`<script type="module">${out.text}</script>`);
 });
