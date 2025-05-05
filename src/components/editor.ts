@@ -4,9 +4,11 @@ import {
   rotationRangeInput,
   waypointDetails,
   applyRotationBtn,
+  autoRotationBtn,
 } from 'src/element.generated';
 import { global } from 'src/global';
 import { getQuaternion } from 'src/utils/getQuaternion';
+import { orientation2D, toDegrees } from 'src/utils/vectors';
 import { updatePreview3D } from './3d';
 import { mapCanvasEl } from './map';
 
@@ -66,6 +68,48 @@ export function initEvent() {
         return;
       }
       const q = getQuaternion(parseFloat(rotationInput.value));
+      if (!q) {
+        return;
+      }
+      global.trackData.waypoints[global.selectedIndex].rotation = q;
+      updateEditorPanel();
+      mapCanvasEl.setPoint(
+        global.trackData.waypoints.map((wp) => ({
+          position: wp.translation,
+          rotation: wp.rotation,
+        })),
+      );
+
+      updatePreview3D();
+      mapCanvasEl.drawMap();
+    },
+    {
+      passive: true,
+    },
+  );
+
+  autoRotationBtn.addEventListener(
+    'click',
+    function () {
+      if (global.selectedIndex === null || !global.trackData || !global.trackData.waypoints[global.selectedIndex]) {
+        alert('No waypoint selected.');
+        return;
+      }
+      const numWaypoints = global.trackData.waypoints.length;
+      const prevWaypointIdx = (global.selectedIndex - 1 + numWaypoints) % numWaypoints;
+      const nextWaypointIdx = (global.selectedIndex + 1 + numWaypoints) % numWaypoints;
+
+      const angleAB = orientation2D(
+        global.trackData.waypoints[prevWaypointIdx].translation,
+        global.trackData.waypoints[global.selectedIndex].translation,
+      );
+      const angleBC = orientation2D(
+        global.trackData.waypoints[global.selectedIndex].translation,
+        global.trackData.waypoints[nextWaypointIdx].translation,
+      );
+      const averageRotation = toDegrees((angleAB + angleBC) / 2);
+
+      const q = getQuaternion(averageRotation);
       if (!q) {
         return;
       }
