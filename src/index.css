@@ -121,7 +121,8 @@ body {
 }
 
 #applyRotationBtn,
-#autoRotationBtn {
+#autoRotationBtn,
+#applyScaleBtn {
   margin-top: 10px;
   width: 100%;
 }
@@ -133,6 +134,7 @@ body {
   display: none;
 }
 
-#rotationInput {
+#rotationInput,
+#scaleInput {
   margin-top: 4px;
 }

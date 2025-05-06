@@ -4,6 +4,8 @@ import {
   rotationRangeInput,
   applyRotationBtn,
   autoRotationBtn,
+  applyScaleBtn,
+  scaleInput,
 } from 'src/element.generated';
 import { global } from 'src/global';
 import { getQuaternion, getQuaternionRad } from 'src/utils/getQuaternion';
@@ -25,6 +27,8 @@ export function updateEditorPanel() {
     const yawDeg = ((yaw * 180) / Math.PI).toFixed(2);
     rotationInput.value = yawDeg;
     rotationRangeInput.value = yawDeg;
+    rotationRangeInput.value = yawDeg;
+    scaleInput.value = global.trackData.waypoints[global.selectedIndex].scale3D.y.toString();
   }
 }
 
@@ -94,6 +98,22 @@ export function initEvent() {
       mapCanvasEl.setPoint(getPoints(global.trackData.waypoints));
 
       updatePreview3D();
+    },
+    {
+      passive: true,
+    },
+  );
+
+  applyScaleBtn.addEventListener(
+    'click',
+    function () {
+      if (global.selectedIndex === null || !global.trackData || !global.trackData.waypoints[global.selectedIndex]) {
+        alert('No waypoint selected.');
+        return;
+      }
+      global.trackData.waypoints[global.selectedIndex].scale3D.y = parseFloat(scaleInput.value);
+      updateEditorPanel();
+      mapCanvasEl.setPoint(getPoints(global.trackData.waypoints));
     },
     {
       passive: true,

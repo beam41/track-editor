@@ -5,5 +5,6 @@ export function getPoints(waypoints: Waypoint[]): Point[] {
   return waypoints.map((wp) => ({
     position: wp.translation,
     yaw: 2 * Math.atan2(wp.rotation.z, wp.rotation.w),
+    scaleY: wp.scale3D.y,
   }));
 }
