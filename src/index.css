@@ -120,13 +120,6 @@ body {
   background: white;
 }
 
-#waypointDetails {
-  background: #f9f9f9;
-  padding: 8px;
-  max-height: 150px;
-  overflow: auto;
-}
-
 #applyRotationBtn,
 #autoRotationBtn {
   margin-top: 10px;

@@ -2,15 +2,15 @@ import {
   selectedInfo,
   rotationInput,
   rotationRangeInput,
-  waypointDetails,
   applyRotationBtn,
   autoRotationBtn,
 } from 'src/element.generated';
 import { global } from 'src/global';
-import { getQuaternion } from 'src/utils/getQuaternion';
-import { orientation2D, toDegrees } from 'src/utils/vectors';
+import { getQuaternion, getQuaternionRad } from 'src/utils/getQuaternion';
 import { updatePreview3D } from './3d';
 import { mapCanvasEl } from './map';
+import { getPoints } from 'src/utils/getPoints';
+import { getAverageRotation } from 'src/utils/getAvarageRotation';
 
 /* ========= Editor Panel and JSON Load/Export ========= */
 export function updateEditorPanel() {
@@ -18,7 +18,6 @@ export function updateEditorPanel() {
     selectedInfo.innerText = 'No waypoint selected';
     rotationInput.value = '0.00';
     rotationRangeInput.value = '0.00';
-    waypointDetails.innerText = '';
   } else {
     selectedInfo.innerText = 'Selected waypoint index: ' + global.selectedIndex;
     const wp = global.trackData.waypoints[global.selectedIndex];
@@ -26,7 +25,6 @@ export function updateEditorPanel() {
     const yawDeg = ((yaw * 180) / Math.PI).toFixed(2);
     rotationInput.value = yawDeg;
     rotationRangeInput.value = yawDeg;
-    waypointDetails.innerText = JSON.stringify(wp.rotation, null, 4);
   }
 }
 
@@ -36,9 +34,6 @@ export function initEvent() {
     () => {
       rotationRangeInput.value = rotationInput.value;
       const q = getQuaternion(parseFloat(rotationInput.value));
-      if (!q) {
-        return;
-      }
       updatePreview3D(q);
     },
     {
@@ -50,9 +45,6 @@ export function initEvent() {
     () => {
       rotationInput.value = (+rotationRangeInput.value).toFixed(2);
       const q = getQuaternion(parseFloat(rotationInput.value));
-      if (!q) {
-        return;
-      }
       updatePreview3D(q);
     },
     {
@@ -68,20 +60,11 @@ export function initEvent() {
         return;
       }
       const q = getQuaternion(parseFloat(rotationInput.value));
-      if (!q) {
-        return;
-      }
       global.trackData.waypoints[global.selectedIndex].rotation = q;
       updateEditorPanel();
-      mapCanvasEl.setPoint(
-        global.trackData.waypoints.map((wp) => ({
-          position: wp.translation,
-          rotation: wp.rotation,
-        })),
-      );
+      mapCanvasEl.setPoint(getPoints(global.trackData.waypoints));
 
       updatePreview3D();
-      mapCanvasEl.drawMap();
     },
     {
       passive: true,
@@ -99,31 +82,18 @@ export function initEvent() {
       const prevWaypointIdx = (global.selectedIndex - 1 + numWaypoints) % numWaypoints;
       const nextWaypointIdx = (global.selectedIndex + 1 + numWaypoints) % numWaypoints;
 
-      const angleAB = orientation2D(
-        global.trackData.waypoints[prevWaypointIdx].translation,
-        global.trackData.waypoints[global.selectedIndex].translation,
+      const averageRotation = getAverageRotation(
+        global.trackData.waypoints[prevWaypointIdx],
+        global.trackData.waypoints[global.selectedIndex],
+        global.trackData.waypoints[nextWaypointIdx],
       );
-      const angleBC = orientation2D(
-        global.trackData.waypoints[global.selectedIndex].translation,
-        global.trackData.waypoints[nextWaypointIdx].translation,
-      );
-      const averageRotation = toDegrees((angleAB + angleBC) / 2);
 
-      const q = getQuaternion(averageRotation);
-      if (!q) {
-        return;
-      }
+      const q = getQuaternionRad(averageRotation);
       global.trackData.waypoints[global.selectedIndex].rotation = q;
       updateEditorPanel();
-      mapCanvasEl.setPoint(
-        global.trackData.waypoints.map((wp) => ({
-          position: wp.translation,
-          rotation: wp.rotation,
-        })),
-      );
+      mapCanvasEl.setPoint(getPoints(global.trackData.waypoints));
 
       updatePreview3D();
-      mapCanvasEl.drawMap();
     },
     {
       passive: true,

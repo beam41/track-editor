@@ -1,6 +1,8 @@
 import { fileInput, trackJson, loadTrackBtn, downloadBtn, clipboardBtn } from 'src/element.generated';
 import { global } from 'src/global';
 import { mapCanvasEl } from './map';
+import { getNormalizedWaypoints } from 'src/utils/getNormalizedWaypoints';
+import { getPoints } from 'src/utils/getPoints';
 
 const PROXY_URL = 'https://www.aseanmotorclub.com/proxy';
 
@@ -25,13 +27,11 @@ function loadTrack() {
   const text = trackJson.value;
   try {
     global.trackData = JSON.parse(text);
+    if (global.trackData) {
+      global.trackData.waypoints = getNormalizedWaypoints(global.trackData.waypoints);
+    }
     global.selectedIndex = null;
-    mapCanvasEl.setPoint(
-      global.trackData!.waypoints.map((wp) => ({
-        position: wp.translation,
-        rotation: wp.rotation,
-      })),
-    );
+    mapCanvasEl.setPoint(getPoints(global.trackData?.waypoints ?? []));
     mapCanvasEl.zoomFit();
     downloadBtn.disabled = false;
     clipboardBtn.disabled = false;

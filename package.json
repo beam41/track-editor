@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "main": "build.js",
   "scripts": {
+    "preinstall": "cd ./mt-map && npm i",
     "generate:element": "node ./generateElement.mjs",
     "build": "npm run generate:element && tsc --noEmit && node ./build.mjs",
     "build:component": "cd ./mt-map && npm run build:component",
