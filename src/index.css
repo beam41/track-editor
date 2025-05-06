@@ -127,7 +127,8 @@ body {
   overflow: auto;
 }
 
-#applyRotationBtn {
+#applyRotationBtn,
+#autoRotationBtn {
   margin-top: 10px;
   width: 100%;
 }

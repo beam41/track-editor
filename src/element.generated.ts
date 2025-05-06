@@ -9,6 +9,7 @@ export const selectedInfo = /*#__PURE__*/ getElementByIdStrict<HTMLParagraphElem
 export const rotationInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationInput");
 export const rotationRangeInput = /*#__PURE__*/ getElementByIdStrict<HTMLInputElement>("rotationRangeInput");
 export const applyRotationBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("applyRotationBtn");
+export const autoRotationBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("autoRotationBtn");
 export const waypointDetails = /*#__PURE__*/ getElementByIdStrict<HTMLPreElement>("waypointDetails");
 export const preview3D = /*#__PURE__*/ getElementByIdStrict<HTMLCanvasElement>("preview3D");
 export const downloadBtn = /*#__PURE__*/ getElementByIdStrict<HTMLButtonElement>("downloadBtn");
