@@ -74,7 +74,7 @@ export function initEvent() {
 
   autoRotationBtn.addEventListener(
     'click',
-    function () {
+    () => {
       if (global.selectedIndex === null || !global.trackData?.waypoints[global.selectedIndex]) {
         alert('No waypoint selected.');
         return;
@@ -101,7 +101,7 @@ export function initEvent() {
 
   applyBtn.addEventListener(
     'click',
-    function () {
+    () => {
       if (global.selectedIndex === null || !global.trackData?.waypoints[global.selectedIndex]) {
         alert('No waypoint selected.');
         return;
@@ -125,4 +125,14 @@ export function initEvent() {
       passive: true,
     },
   );
+
+  const posChange = () => {
+    mapCanvasEl.setSelectedPointsPosition({
+      x: +posXInput.value * 100,
+      y: +posYInput.value * 100,
+    });
+  };
+
+  posXInput.addEventListener('input', posChange);
+  posYInput.addEventListener('input', posChange);
 }

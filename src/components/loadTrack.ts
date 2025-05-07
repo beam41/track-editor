@@ -57,7 +57,7 @@ export function initEvent() {
       if (fileInput.files && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         const reader = new FileReader();
-        reader.onload = function (e) {
+        reader.onload = (e) => {
           try {
             JSON.parse(e.target?.result as string);
             trackJson.value = e.target?.result as string;

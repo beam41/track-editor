@@ -8,7 +8,7 @@ function getTrackData() {
 export function initEvent() {
   downloadBtn.addEventListener(
     'click',
-    function () {
+    () => {
       if (!global.trackData) return;
       const dataStr = getTrackData();
       const blob = new Blob([dataStr], { type: 'application/json' });
@@ -28,7 +28,7 @@ export function initEvent() {
 
   clipboardBtn.addEventListener(
     'click',
-    function () {
+    () => {
       if (!global.trackData) return;
       const dataStr = getTrackData();
       navigator.clipboard.writeText(dataStr);
