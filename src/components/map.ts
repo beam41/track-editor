@@ -1,6 +1,5 @@
-import { mapCanvas } from '../element.generated';
+import { mapCanvas, posXInput, posYInput } from '../element.generated';
 import { global } from '../global';
-import { updatePreview3D } from './3d';
 import { updateEditorPanel } from './editor';
 import '../../mt-map/dist/map';
 import type { MotorTownMap } from '../../mt-map/dist/map';
@@ -12,6 +11,10 @@ export function initEvent() {
   mapCanvasEl.addEventListener('mt-map:point-click', (e) => {
     global.selectedIndex = e.detail.index;
     updateEditorPanel();
-    updatePreview3D();
+  });
+
+  mapCanvasEl.addEventListener('mt-map:point-move', (e) => {
+    posXInput.value = (e.detail.position.x / 100).toString();
+    posYInput.value = (e.detail.position.y / 100).toString();
   });
 }

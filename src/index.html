@@ -45,7 +45,6 @@
       <!-- Left: Map Plot with alignment -->
       <div class="canvasContainer">
         <mt-map id="mapCanvas" track-mode="true" point-color="blue" point-selected-color="orange"></mt-map>
-        <button id="recenterBtn" type="button">Recenter</button>
       </div>
       <!-- Right: Editor and 3D Preview -->
       <div class="rightBox">
@@ -54,25 +53,37 @@
           <div class="editorContainer">
             <h3>Waypoint Editor</h3>
             <p id="selectedInfo">No waypoint selected</p>
+            <hr style="margin: 16px 0" />
             <label>
               Rotation (degrees): <br />
-              <input type="number" id="rotationInput" value="0" />
+              <input type="number" class="input" id="rotationInput" value="0" />
               <input type="range" id="rotationRangeInput" min="-180" max="180" step="0.01" />
             </label>
-            <button id="applyRotationBtn" type="button">Apply Rotation</button>
-            <button id="autoRotationBtn" type="button">Auto Fix Rotation</button>
             <hr style="margin: 16px 0" />
             <label>
               Waypoint width (meters): <br />
-              <input type="number" id="scaleInput" value="0" />
+              <input type="number" class="input" id="scaleYInput" value="0" />
             </label>
-            <button id="applyScaleBtn" type="button">Apply Width</button>
-          </div>
-          <!-- 3D Preview Panel -->
-          <div class="previewContainer">
-            <h3>3D Preview</h3>
-            <p>Arrow indicate north</p>
-            <canvas id="preview3D" width="300" height="300"></canvas>
+            <label class="itemGap">
+              Waypoint height (meters): <br />
+              <input type="number" class="input" id="scaleZInput" value="0" />
+            </label>
+            <hr style="margin: 16px 0" />
+            <label>
+              position x (meters): <br />
+              <input type="number" class="input" id="posXInput" value="0" />
+            </label>
+            <label class="itemGap">
+              position y (meters): <br />
+              <input type="number" class="input" id="posYInput" value="0" />
+            </label>
+            <label class="itemGap">
+              position z (meters): <br />
+              <input type="number" class="input" id="posZInput" value="0" />
+            </label>
+            <hr style="margin: 16px 0" />
+            <button id="autoRotationBtn" class="button" type="button">Auto Fix Rotation</button>
+            <button id="applyBtn" class="button itemGap" type="button">Apply Changes</button>
           </div>
         </div>
         <div class="btnContainer">
@@ -81,14 +92,5 @@
         </div>
       </div>
     </div>
-
-    <script type="importmap">
-      {
-        "imports": {
-          "three": "https://unpkg.com/three@0.176.0/build/three.module.js",
-          "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.176.0/examples/jsm/"
-        }
-      }
-    </script>
   </body>
 </html>

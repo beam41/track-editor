@@ -1,5 +1,7 @@
+import { toRad } from "./vectors";
+
 export function getQuaternion(degYaw: number) {
-  const radYaw = (degYaw * Math.PI) / 180;
+  const radYaw = toRad(degYaw);
   return getQuaternionRad(radYaw);
 }
 

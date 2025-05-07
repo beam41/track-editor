@@ -9,3 +9,7 @@ export function orientation2D(from: Point, to: Point): number {
 export function toDegrees(rad: number): number {
   return rad * (180 / Math.PI);
 }
+
+export function toRad(deg: number): number {
+  return (deg * Math.PI) / 180;
+}

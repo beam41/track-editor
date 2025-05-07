@@ -31,7 +31,7 @@ function loadTrack() {
       global.trackData.waypoints = getNormalizedWaypoints(global.trackData.waypoints);
     }
     global.selectedIndex = null;
-    mapCanvasEl.setPoint(getPoints(global.trackData?.waypoints ?? []));
+    mapCanvasEl.setPoints(getPoints(global.trackData?.waypoints ?? []), true);
     mapCanvasEl.zoomFit();
     downloadBtn.disabled = false;
     clipboardBtn.disabled = false;

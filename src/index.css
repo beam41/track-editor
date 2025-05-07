@@ -120,21 +120,18 @@ body {
   background: white;
 }
 
-#applyRotationBtn,
-#autoRotationBtn,
-#applyScaleBtn {
-  margin-top: 10px;
+.button {
   width: 100%;
 }
 
-#recenterBtn {
-  position: absolute;
-  bottom: 8px;
-  right: 8px;
-  display: none;
+.itemGap {
+  margin-top: 10px;
 }
 
-#rotationInput,
-#scaleInput {
+label.itemGap {
+  display: block;
+}
+
+.input {
   margin-top: 4px;
 }
