@@ -31,12 +31,12 @@ export function updateEditorPanel() {
     rotationInput.value = yawDeg;
     rotationRangeInput.value = yawDeg;
 
-    scaleYInput.value = global.trackData.waypoints[global.selectedIndex].scale3D.y.toString();
-    scaleZInput.value = global.trackData.waypoints[global.selectedIndex].scale3D.z.toString();
+    scaleYInput.value = wp.scale3D.y.toString();
+    scaleZInput.value = wp.scale3D.z.toString();
 
-    posXInput.value = (global.trackData.waypoints[global.selectedIndex].translation.x / 100).toString();
-    posYInput.value = (global.trackData.waypoints[global.selectedIndex].translation.y / 100).toString();
-    posZInput.value = (global.trackData.waypoints[global.selectedIndex].translation.z / 100).toString();
+    posXInput.value = (wp.translation.x / 100).toString();
+    posYInput.value = (wp.translation.y / 100).toString();
+    posZInput.value = (wp.translation.z / 100).toString();
   }
 }
 
@@ -66,6 +66,8 @@ export function initEvent() {
     'input',
     () => {
       mapCanvasEl.setSelectedPointsScaleY(+scaleYInput.value);
+      // eslint-disable-next-line no-self-assign
+      scaleYInput.value = scaleYInput.value;
     },
     {
       passive: true,
@@ -106,20 +108,23 @@ export function initEvent() {
         alert('No waypoint selected.');
         return;
       }
+      const wp = global.trackData.waypoints[global.selectedIndex];
+
       // rotation
       const q = getQuaternion(parseFloat(rotationInput.value));
-      global.trackData.waypoints[global.selectedIndex].rotation = q;
-      updateEditorPanel();
-      mapCanvasEl.setPoints(getPoints(global.trackData.waypoints));
+      wp.rotation = q;
 
       // scale
-      global.trackData.waypoints[global.selectedIndex].scale3D.y = parseFloat(scaleYInput.value);
-      global.trackData.waypoints[global.selectedIndex].scale3D.z = parseFloat(scaleZInput.value);
+      wp.scale3D.y = parseFloat(scaleYInput.value);
+      wp.scale3D.z = parseFloat(scaleZInput.value);
 
       // position
-      global.trackData.waypoints[global.selectedIndex].translation.x = parseFloat(posXInput.value) * 100;
-      global.trackData.waypoints[global.selectedIndex].translation.y = parseFloat(posYInput.value) * 100;
-      global.trackData.waypoints[global.selectedIndex].translation.z = parseFloat(posZInput.value) * 100;
+      wp.translation.x = parseFloat(posXInput.value) * 100;
+      wp.translation.y = parseFloat(posYInput.value) * 100;
+      wp.translation.z = parseFloat(posZInput.value) * 100;
+
+      updateEditorPanel();
+      mapCanvasEl.setPoints(getPoints(global.trackData.waypoints));
     },
     {
       passive: true,
