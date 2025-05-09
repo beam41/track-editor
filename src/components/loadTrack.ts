@@ -3,6 +3,7 @@ import { global } from 'src/global';
 import { mapCanvasEl } from './map';
 import { getNormalizedWaypoints } from 'src/utils/getNormalizedWaypoints';
 import { getPoints } from 'src/utils/getPoints';
+import { validateRouteData } from 'src/utils/validation';
 
 const PROXY_URL = 'https://www.aseanmotorclub.com/proxy';
 
@@ -26,10 +27,16 @@ function maybeFetchTrackUri(proxy = PROXY_URL) {
 function loadTrack() {
   const text = trackJson.value;
   try {
-    global.trackData = JSON.parse(text);
+    const trackData = JSON.parse(text);
+    if (!validateRouteData(trackData)) {
+      return;
+    }
+    global.trackData = trackData;
+
     if (global.trackData) {
       global.trackData.waypoints = getNormalizedWaypoints(global.trackData.waypoints);
     }
+
     global.selectedIndex = null;
     mapCanvasEl.setPoints(getPoints(global.trackData?.waypoints ?? []), true);
     mapCanvasEl.zoomFit();

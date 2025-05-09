@@ -15,7 +15,7 @@ export function initEvent() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'track_updated.json';
+      a.download = (global.trackData.routeName?.trim() || 'track_updated') + '.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);

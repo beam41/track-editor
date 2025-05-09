@@ -23,7 +23,7 @@ export type Waypoint = {
 };
 
 export type TrackData = {
-  routeName: string;
+  routeName?: string;
   waypoints: Waypoint[];
 };
 
