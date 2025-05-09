@@ -75,13 +75,13 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  overflow-y: scroll;
+  overflow-y: auto;
   overflow-x: hidden;
   position: relative;
 }
 
 .rightBoxScrollable > div {
-  width: 324px;
+  width: 320px;
 }
 
 .editorContainer {

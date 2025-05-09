@@ -46,8 +46,7 @@ export function initEvent() {
   maybeFetchTrackUri().then((track) => {
     if (track) {
       trackJson.value = JSON.stringify(track, null, 4);
-      // TODO: remove hack, instead listen to map load event before loading track
-      setTimeout(loadTrack, 1000);
+      loadTrack();
     }
   });
 
