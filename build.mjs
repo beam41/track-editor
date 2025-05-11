@@ -55,6 +55,7 @@ mkdirSync('./dist');
 writeFileSync('./dist/index.html', minHtml, 'utf8');
 copyFileSync('./mt-map/dist/map.png', './dist/map.png');
 copyFileSync('./mt-map/dist/road.svg', './dist/road.svg');
+copyFileSync('./mt-map/dist/map.js', './dist/map.js');
 
 const resultFile = readdirSync('./dist');
 const longestFileName = resultFile.reduce((a, c) => Math.max(a, c.length), 0);
