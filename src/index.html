@@ -82,7 +82,17 @@
               <input type="number" class="input" id="posZInput" value="0" />
             </label>
             <hr style="margin: 16px 0" />
-            <button id="autoRotationBtn" class="button" type="button">Auto Fix Rotation</button>
+            <div class="deleteBtnGroup">
+              <div id="deleteConfirmModal">
+                Confirm delete?
+                <div class="confirmDeleteItem itemGap">
+                  <button id="deleteConfirmBtn" class="button" type="button">Delete</button>
+                  <button id="deleteCancelBtn" class="button" type="button">Cancel</button>
+                </div>
+              </div>
+              <button id="deleteBtn" class="button" type="button">Delete waypoint</button>
+            </div>
+            <button id="autoRotationBtn" class="button itemGap" type="button">Auto Fix Rotation</button>
             <button id="applyBtn" class="button itemGap" type="button">Apply Changes</button>
           </div>
         </div>

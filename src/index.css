@@ -135,3 +135,27 @@ label.itemGap {
 .input {
   margin-top: 4px;
 }
+
+.deleteBtnGroup {
+  position: relative;
+}
+
+#deleteConfirmModal {
+  padding: 8px;
+  position: absolute;
+  bottom: 0;
+  display: none;
+  width: 100%;
+  background: white;
+  box-sizing: border-box;
+}
+
+.confirmDeleteItem {
+  display: flex;
+  gap: 4px;
+}
+
+#deleteConfirmBtn,
+#deleteBtn {
+  color: red;
+}

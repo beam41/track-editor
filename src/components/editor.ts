@@ -9,6 +9,10 @@ import {
   posYInput,
   posZInput,
   applyBtn,
+  deleteBtn,
+  deleteConfirmModal,
+  deleteCancelBtn,
+  deleteConfirmBtn,
 } from 'src/element.generated';
 import { global } from 'src/global';
 import { getQuaternion, getQuaternionRad } from 'src/utils/getQuaternion';
@@ -140,4 +144,26 @@ export function initEvent() {
 
   posXInput.addEventListener('input', posChange);
   posYInput.addEventListener('input', posChange);
+
+  deleteBtn.addEventListener('click', () => {
+    if (global.trackData && global.selectedIndex !== null) {
+      deleteConfirmModal.style.display = 'block';
+    }
+  });
+
+  deleteCancelBtn.addEventListener('click', () => {
+    deleteCancelBtn.style.display = 'none';
+  });
+
+  deleteConfirmBtn.addEventListener('click', () => {
+    if (global.trackData && global.selectedIndex !== null) {
+      global.trackData.waypoints = [
+        ...global.trackData.waypoints.slice(0, global.selectedIndex),
+        ...global.trackData.waypoints.slice(global.selectedIndex + 1),
+      ];
+      mapCanvasEl.setPoints(getPoints(global.trackData.waypoints), true);
+    }
+
+    deleteConfirmModal.style.display = 'none';
+  });
 }
