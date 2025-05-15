@@ -152,7 +152,7 @@ export function initEvent() {
   });
 
   deleteCancelBtn.addEventListener('click', () => {
-    deleteCancelBtn.style.display = 'none';
+    deleteConfirmModal.style.display = 'none';
   });
 
   deleteConfirmBtn.addEventListener('click', () => {
