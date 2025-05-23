@@ -1,6 +1,6 @@
 import type { Waypoint } from 'src/index.types';
 import { getQuaternionRad } from './getQuaternion';
-import { getAverageRotation } from './getAvarageRotation';
+import { getAverageRotation } from './getAverageRotation';
 import { getNormalizedRotation } from './getNormalizedRotation';
 import { orientation2D } from './vectors';
 

@@ -18,7 +18,7 @@ import { global } from 'src/global';
 import { getQuaternion, getQuaternionRad } from 'src/utils/getQuaternion';
 import { mapCanvasEl } from './map';
 import { getPoints } from 'src/utils/getPoints';
-import { getAverageRotation } from 'src/utils/getAvarageRotation';
+import { getAverageRotation } from 'src/utils/getAverageRotation';
 import { toRad } from 'src/utils/vectors';
 
 /* ========= Editor Panel and JSON Load/Export ========= */
@@ -161,6 +161,7 @@ export function initEvent() {
         ...global.trackData.waypoints.slice(0, global.selectedIndex),
         ...global.trackData.waypoints.slice(global.selectedIndex + 1),
       ];
+      global.selectedIndex = null;
       mapCanvasEl.setPoints(getPoints(global.trackData.waypoints), true);
     }
 
